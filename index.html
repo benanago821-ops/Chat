@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10111c">
+  <meta name="description" content="NovaChat — پیام‌رسان خصوصی و زنده">
+  <title>NovaChat | پیام‌رسان</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="background-glow"></div>
+
+  <main class="app-shell">
+    <header class="topbar">
+      <button id="mobile-menu-btn" class="icon-button" aria-label="منو">☰</button>
+      <div class="brand">
+        <div class="brand-icon">N</div>
+        <div>
+          <h1>NovaChat</h1>
+          <p>ارتباطی ساده، سریع و خصوصی</p>
+        </div>
+      </div>
+      <button id="theme-btn" class="icon-button" aria-label="تغییر تم">☼</button>
+    </header>
+
+    <section id="auth-view" class="auth-layout">
+      <div class="welcome-panel">
+        <span class="eyebrow">✦ نسل تازهٔ گفتگو</span>
+        <h2>فاصله‌ها را<br><span>کم‌رنگ کن.</span></h2>
+        <p>حساب بساز، دوستانت را پیدا کن و در لحظه گفت‌وگو کن.</p>
+        <div class="feature-pills">
+          <span>● گفت‌وگوی زنده</span>
+          <span>● حساب شخصی</span>
+          <span>● طراحی واکنش‌گرا</span>
+        </div>
+      </div>
+
+      <div class="panel auth-panel">
+        <div class="tabs">
+          <button class="tab active" data-auth-tab="login">ورود</button>
+          <button class="tab" data-auth-tab="signup">ثبت‌نام</button>
+        </div>
+
+        <form id="login-form" class="auth-form">
+          <h2>خوش برگشتی 👋</h2>
+          <p class="muted">برای ادامه وارد حسابت شو.</p>
+          <label for="login-email">ایمیل</label>
+          <input id="login-email" type="email" autocomplete="email" required placeholder="name@example.com">
+          <label for="login-password">رمز عبور</label>
+          <input id="login-password" type="password" autocomplete="current-password" required minlength="6" placeholder="رمز عبور">
+          <button class="primary-button" type="submit">ورود به NovaChat</button>
+        </form>
+
+        <form id="signup-form" class="auth-form hidden">
+          <h2>حساب جدید بساز ✨</h2>
+          <p class="muted">نام کاربری تو، راه پیدا کردنت توسط دیگران است.</p>
+          <label for="signup-name">نام نمایشی</label>
+          <input id="signup-name" maxlength="60" required placeholder="نامی که نمایش داده می‌شود">
+          <label for="signup-username">نام کاربری انگلیسی</label>
+          <input id="signup-username" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" required autocomplete="username" placeholder="مثلاً nova_user">
+          <small>۳ تا ۲۴ حرف انگلیسی، عدد یا زیرخط</small>
+          <label for="signup-email">ایمیل</label>
+          <input id="signup-email" type="email" autocomplete="email" required placeholder="name@example.com">
+          <label for="signup-password">رمز عبور</label>
+          <input id="signup-password" type="password" autocomplete="new-password" minlength="8" required placeholder="حداقل ۸ کاراکتر">
+          <button class="primary-button" type="submit">ساخت حساب</button>
+        </form>
+        <p class="security-note">🔐 دسترسی‌ها در دیتابیس کنترل می‌شوند؛ فقط مخفی‌کردن دکمه‌ها امنیت محسوب نمی‌شود.</p>
+      </div>
+    </section>
+
+    <section id="chat-view" class="chat-layout hidden">
+      <aside id="sidebar" class="sidebar panel">
+        <div class="profile-card">
+          <div id="my-avatar" class="avatar">N</div>
+          <div class="profile-info">
+            <strong id="my-display-name">کاربر NovaChat</strong>
+            <span id="my-username">@username</span>
+          </div>
+          <button id="logout-btn" class="icon-button small" title="خروج" aria-label="خروج">↪</button>
+        </div>
+
+        <div class="search-box">
+          <span>⌕</span>
+          <input id="user-search" type="search" maxlength="24" placeholder="جست‌وجوی نام کاربری">
+        </div>
+        <div id="search-results" class="user-list"></div>
+
+        <div class="section-heading">
+          <h3>گفت‌وگوها</h3>
+          <span id="contact-count">۰</span>
+        </div>
+        <div id="contact-list" class="user-list"></div>
+        <div id="pending-requests" class="requests-area"></div>
+        <p class="sidebar-foot">NovaChat · گفت‌وگوی خصوصی</p>
+      </aside>
+
+      <section class="conversation panel">
+        <div id="empty-chat" class="empty-state">
+          <div class="empty-art">✦</div>
+          <h2>گفت‌وگویی را انتخاب کن</h2>
+          <p>با نام کاربری دوستانت را جست‌وجو کن و درخواست ارتباط بفرست.</p>
+        </div>
+
+        <div id="active-chat" class="active-chat hidden">
+          <header class="chat-header">
+            <button id="back-sidebar-btn" class="icon-button back-button" aria-label="بازگشت">→</button>
+            <div id="chat-avatar" class="avatar">N</div>
+            <div class="chat-user">
+              <strong id="chat-display-name">کاربر</strong>
+              <span id="chat-username">@username</span>
+            </div>
+            <span class="live-indicator">● آنلاین نیست؟</span>
+          </header>
+
+          <div id="messages" class="messages" aria-live="polite"></div>
+
+          <form id="message-form" class="message-composer">
+            <textarea id="message-input" rows="1" maxlength="5000" required placeholder="پیامت را بنویس..."></textarea>
+            <button class="send-button" type="submit" aria-label="ارسال پیام">➤</button>
+          </form>
+          <p class="composer-hint">پیام‌ها فقط برای اعضای همین گفت‌وگو قابل خواندن هستند.</p>
+        </div>
+      </section>
+    </section>
+
+    <div id="toast" class="toast" role="status"></div>
+    <footer class="app-footer">ساخته‌شده برای ارتباط بهتر · <strong>NovaChat</strong></footer>
+  </main>
+</body>
+</html>
