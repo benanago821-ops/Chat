@@ -4,7 +4,7 @@
    فقط کلید عمومی Publishable در مرورگر
 ========================================== */
 
-const SUPABASE_URL = "https://sacxosekpcnmhvcdduhg.supabase.co";
+const SUPABASE_URL = "https://benanago821-ops.github.io/Chat/";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_G5TXiF0sniOKG4z0qvBKFw_o6v_As3F";
 
 const supabaseClient = window.supabase.createClient(
